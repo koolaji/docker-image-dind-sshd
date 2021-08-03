@@ -1,6 +1,6 @@
 # About this Repo
 
-Forked and basied on official docker:dind image with an added SSH server.
+Forked and based on official docker:dind image with an added SSH server.
 
 ## Common configuration
  - configuring and SSH key using ENV `AUTHORIZED_KEYS` - you need to have the public key here, not the path to the public key
