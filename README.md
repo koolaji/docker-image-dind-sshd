@@ -5,7 +5,7 @@ Forked and based on official docker:dind image with an added SSH server.
 ## Common configuration
  - configuring and SSH key using ENV `AUTHORIZED_KEYS` - you need to have the public key here, not the path to the public key
  
-## Docker socket (reuse running docker engine
+## Docker socket (reuse running docker engine)
  - Mount your local docker socket into the container to `/var/run/docker.sock`
  - add the `COMMAND` docker
  
@@ -13,10 +13,9 @@ This will run the image, start the SSHD daemon and let the `docker` command talk
 
 ## Start isolated docker engine
  - use `privileged: true` when you start the container
- 
- - configuring and the docker client config ( /root/.docker/config.json) key using ENV `DOCKER_CLIENT_CONFIG_JSON`
+ - configuring and the docker client config (/root/.docker/config.json) key using ENV `DOCKER_CLIENT_CONFIG_JSON`
 
-This way you run a fresh, isolated docker engine inside the container ( true dind )
+This way you run a fresh, isolated docker engine inside the container (real dind)
 
 
 ## More option

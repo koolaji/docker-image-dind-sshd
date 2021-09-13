@@ -1,23 +1,23 @@
 FROM docker:dind
 
-ENV DOCKER_COMPOSE_VERSION 1.22.0
+ENV DOCKER_COMPOSE_VERSION 1.29.2
 
 # https://github.com/docker/docker/blob/master/project/PACKAGERS.md#runtime-dependencies
 RUN apk add --no-cache \
-		btrfs-progs \
-		e2fsprogs \
-		e2fsprogs-extra \
-		iptables \
-		xfsprogs \
-		xz \
-		py-pip \
-		openssh \
-    rsyslog \
-		git \
+	btrfs-progs \
+	e2fsprogs \
+	e2fsprogs-extra \
+	iptables \
+	xfsprogs \
+	xz \
+	py3-pip python3-dev libffi-dev openssl-dev gcc libc-dev rust cargo make \
+	openssh \
+	rsyslog \
+	git \
 	&& pip install --upgrade pip \
 	&& pip install -U docker-compose==${DOCKER_COMPOSE_VERSION} \
 	&& rm -rf /root/.cache \
-    && chmod +x /usr/local/bin/dind \
+	&& chmod +x /usr/local/bin/dind \
 	&& mkdir -p /root/.docker/ /root/.ssh/ \
 	&& touch /root/.docker/config.json \
 	&& touch /root/.ssh/authorized_keys \
@@ -27,9 +27,9 @@ RUN apk add --no-cache \
 
 # disable password auth - a no-go in any case
 RUN echo "PermitRootLogin prohibit-password" >> /etc/ssh/sshd_config && \
-  echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
-  echo "ClientAliveInterval 120" >> /etc/ssh/sshd_config && \  
-  echo "ClientAliveCountMax 720" >> /etc/ssh/sshd_config
+	echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+	echo "ClientAliveInterval 120" >> /etc/ssh/sshd_config && \  
+	echo "ClientAliveCountMax 720" >> /etc/ssh/sshd_config
 
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
