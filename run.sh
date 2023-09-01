@@ -25,6 +25,12 @@ syslogd &
 echo "starting ssshd"
 /usr/sbin/sshd -D &
 
+mkdir -p /root/.ssh/
+
+touch /root/.ssh/authorized_keys
+
+chmod 600 /root/.ssh/authorized_keys
+
 # reread all config
 source /etc/profile
 
@@ -45,5 +51,4 @@ if [ "$1" = 'docker' ]; then
 fi
 
 echo "starting dind"
-
 exec dockerd-entrypoint.sh "$@"
