@@ -1,8 +1,9 @@
-FROM docker:dind
+FROM docker
 
-ENV DOCKER_COMPOSE_VERSION 1.29.2
+#ENV DOCKER_COMPOSE_VERSION 1.8.0
+#ENV COMPOSE_API_VERSION=1.18
 
-# https://github.com/docker/docker/blob/master/project/PACKAGERS.md#runtime-dependencies
+
 RUN apk add --no-cache \
 	btrfs-progs \
 	e2fsprogs \
@@ -14,8 +15,9 @@ RUN apk add --no-cache \
 	openssh \
 	rsyslog \
 	git \
-	&& pip install --upgrade pip \
-	&& pip install -U docker-compose==${DOCKER_COMPOSE_VERSION} \
+	&& pip install --upgrade pip 
+RUN     pip install "pyyaml<6.0.0,!=5.4.0,!=5.4.1"\
+	&& pip install -U docker-compose \
 	&& rm -rf /root/.cache \
 	&& chmod +x /usr/local/bin/dind \
 	&& mkdir -p /root/.docker/ /root/.ssh/ \
@@ -24,19 +26,21 @@ RUN apk add --no-cache \
 	&& chmod u=rwx,g=,o= /root/.ssh \
 	&& chmod u=r,g=,o= /root/.ssh/authorized_keys \
 	&& rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
+# TODO aufs-tools
 
-# disable password auth - a no-go in any case
-RUN echo "PermitRootLogin prohibit-password" >> /etc/ssh/sshd_config && \
-	echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
-	echo "ClientAliveInterval 120" >> /etc/ssh/sshd_config && \  
-	echo "ClientAliveCountMax 720" >> /etc/ssh/sshd_config
 
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
 
+RUN wget "https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind" -O /usr/local/bin/dind \
+	&& chmod +x /usr/local/bin/dind
+
+COPY dockerd-entrypoint.sh /usr/local/bin/
+COPY run.sh /usr/local/bin/
+
+VOLUME /var/lib/docker
 EXPOSE 2375 22
 
 #make sure we get fresh keys
-
-ENTRYPOINT ["/run.sh"]
+RUN rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
+ENV DOCKER_HOST tcp://127.0.0.1:2375
+ENTRYPOINT ["run.sh"]
 CMD []

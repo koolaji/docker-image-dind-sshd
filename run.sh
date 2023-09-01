@@ -1,20 +1,17 @@
 #!/bin/sh
-set -e
-# X forward version
-
 #SSHD
 # prepare keys
 if [ ! -f "/etc/ssh/ssh_host_rsa_key" ]; then
-	# generate fresh rsa key
-	ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+        # generate fresh rsa key
+        ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
 fi
 if [ ! -f "/etc/ssh/ssh_host_dsa_key" ]; then
-	# generate fresh dsa key
-	ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
+        # generate fresh dsa key
+        ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
 fi
 #prepare run dir
 if [ ! -d "/var/run/sshd" ]; then
-	mkdir -p /var/run/sshd
+        mkdir -p /var/run/sshd
 fi
 
 # unlock root user for ssh user
@@ -48,4 +45,5 @@ if [ "$1" = 'docker' ]; then
 fi
 
 echo "starting dind"
-exec /usr/local/bin/dockerd-entrypoint.sh "$@"
+
+exec dockerd-entrypoint.sh "$@"

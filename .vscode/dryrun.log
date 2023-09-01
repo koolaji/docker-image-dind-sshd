@@ -1,4 +1,0 @@
-make: Entering directory '/home/em/Development/repos/docker-image-dind-sshd'
-docker build --rm -t eugenmayer/docker-dind-sshd ./
-make: Leaving directory '/home/em/Development/repos/docker-image-dind-sshd'
- 
