@@ -1,0 +1,15 @@
+FROM redhat/ubi8:8.8-854
+
+
+RUN dnf install -y podman 
+RUN  dnf install openssh-server vim net-tools git sudo iputils podman-plugins  -y
+COPY run_podman.sh /usr/local/bin/
+
+EXPOSE  22
+
+RUN rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
+
+ENTRYPOINT ["run_podman.sh"] 
+
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
